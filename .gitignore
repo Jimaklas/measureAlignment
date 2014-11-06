@@ -52,3 +52,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Main program input data
+input.py
