@@ -6,6 +6,9 @@ from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, POINTS_AT_GEOM_STAT
                   POINTS_AT_PVI_STATIONS, STARTING_STATION, ENDING_STATION, OFFSETS, \
                   STEP, TOLERANCE  # ZERO not used yet, it's meant for floating point comparisons
 
+# FIXME: Eliminate float comparisons hotfix
+# TODO: Implement program behavior for alignments without profile data
+
 # # Generate modules of necessary typelibs (AutoCAD Civil 3D 2008)
 # comtypes.client.GetModule("C:\\Program Files\\Common Files\\Autodesk Shared\\acax17enu.tlb")
 # comtypes.client.GetModule("C:\\Program Files\\AutoCAD Civil 3D 2008\\AecXBase.tlb")
