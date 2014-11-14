@@ -4,7 +4,7 @@ from comtypes import COMError
 from collections import OrderedDict
 from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, POINTS_AT_GEOM_STATIONS, \
                   POINTS_AT_PVI_STATIONS, STARTING_STATION, ENDING_STATION, OFFSETS, \
-                  STEP, TOLERANCE  # ZERO not used yet, it's meant for floating point comparisons
+                  STEP, TOLERANCE
 
 # FIXME: Eliminate float comparisons hotfix
 # TODO: Implement program behavior for alignments without profile data
@@ -33,6 +33,21 @@ if STARTING_STATION is None:
 if ENDING_STATION is None:
     ENDING_STATION = alignment.EndingStation
 pointStations = [STARTING_STATION, ENDING_STATION]
+
+
+def isalmostzero(num, zero=ZERO):
+    return abs(num) <= zero
+
+
+def isalmostequal(num1, num2, zero=ZERO):
+    return isalmostzero(num1 - num2, zero)
+
+
+def isnuminiterable(num, iterable, zero=ZERO):
+    for elem in iterable:
+        if isalmostequal(num, elem, zero):
+            return True
+    return False
 
 # Get Alignment entities if needed
 if POINTS_AT_GEOM_STATIONS:
@@ -67,11 +82,11 @@ if POINTS_AT_GEOM_STATIONS:
     # Make sure each entity starts where the previous one ends
     values = entities.values()
     for i in range(len(values) - 1):
-        assert values[i].EndingStation == values[i + 1].StartingStation  # float comparison here
+        assert isalmostequal(values[i].EndingStation, values[i + 1].StartingStation)
 
     # Add applicable entity starting stations to pointStations
     for station in entities.keys():
-        if (station >= STARTING_STATION) and (station <= ENDING_STATION) and (station not in pointStations):  # float comparison here
+        if (station >= STARTING_STATION) and (station <= ENDING_STATION) and not isnuminiterable(station, pointStations):
             pointStations.append(station)
 
 # Get desired alignment profile
@@ -90,11 +105,11 @@ else:
 if POINTS_AT_PVI_STATIONS:
     for pvi in profile.PVIs:
         station = pvi.Station
-        if (station >= STARTING_STATION) and (station <= ENDING_STATION) and (station not in pointStations):  # float comparison here
+        if (station >= STARTING_STATION) and (station <= ENDING_STATION) and not isnuminiterable(station, pointStations):
             pointStations.append(station)
 
 for station in POINT_MANDATORY_STATIONS:
-    if (station >= STARTING_STATION) and (station <= ENDING_STATION) and (station not in pointStations):  # float comparison here
+    if (station >= STARTING_STATION) and (station <= ENDING_STATION) and not isnuminiterable(station, pointStations):
         pointStations.append(station)
 
 pointStations.sort()
@@ -110,9 +125,9 @@ while i != len(pointStations) - 1:
         pointStations.sort()
     i += 1
 
-# Check if there are any stations in pointStations that are too close (due to float comparisons above and/or POINT_MANDATORY_STATIONS)
+# Check if there are any stations in pointStations that are too close (due to POINT_MANDATORY_STATIONS)
 for i in range(len(pointStations) - 1):
-    if abs(pointStations[i + 1] - pointStations[i]) <= TOO_CLOSE:
+    if isalmostequal(pointStations[i], pointStations[i + 1], TOO_CLOSE):
         print 50 * "!"
         print "WARNING: Stations %f and %f are too close!" % (pointStations[i], pointStations[i + 1])
         print 50 * "!"
