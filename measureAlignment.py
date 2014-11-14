@@ -198,7 +198,7 @@ for i in range(len(pointStations) - 1):
 
 # Draw 3D Polylines at givven stations and offsets
 for offset in OFFSETS:
-    command = "3dpoly "
+    command = ["3dpoly"]
     print 70 * "-"
     for station in pointStations:
         print "Point at station %.6f - offset %.2f" % (station, offset)
@@ -207,6 +207,7 @@ for offset in OFFSETS:
             z = profile.ElevationAt(station)
         except COMError:
             z = 0.0
-        command = command + "%s,%s,%s " % (x, y, z)
+        command.append("%s,%s,%s" % (x, y, z))
 
-    doc.SendCommand(command + " ")
+    command.append(" ")
+    doc.SendCommand(" ".join(command))
