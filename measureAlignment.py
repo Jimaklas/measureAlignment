@@ -6,7 +6,6 @@ from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, POINTS_AT_GEOM_STAT
                   POINTS_AT_PVI_STATIONS, STARTING_STATION, ENDING_STATION, OFFSETS, \
                   STEP, TOLERANCE
 
-# FIXME: Eliminate float comparisons hotfix
 # TODO: Implement program behavior for alignments without profile data
 
 #-------------------------- Sample input.py ---------------------------
