@@ -2,8 +2,9 @@
 import comtypes.client
 from comtypes import COMError
 from collections import OrderedDict
-from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, POINTS_AT_GEOM_STATIONS, \
-                  POINTS_AT_PVI_STATIONS, STARTING_STATION, ENDING_STATION, OFFSETS, \
+from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, \
+                  POINTS_AT_GEOM_STATIONS, POINTS_AT_PVI_STATIONS, \
+                  STARTING_STATION, ENDING_STATION, OFFSETS, \
                   STEP, TOLERANCE
 
 # TODO: Implement program behavior for alignments without profile data
@@ -29,7 +30,8 @@ from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, POINTS_AT_GEOM_STAT
 # comtypes.client.GetModule("C:\\Program Files\\AutoCAD Civil 3D 2008\\Civil\\AeccXUiLand.tlb")
 # raise SystemExit
 
-TLB = comtypes.client.GetModule("C:\\Program Files\\AutoCAD Civil 3D 2008\\Civil\\AeccXLand.tlb")
+TLB = comtypes.client.GetModule(
+    "C:\\Program Files\\AutoCAD Civil 3D 2008\\Civil\\AeccXLand.tlb")
 
 # Get running instance of the AutoCAD application
 acadApp = comtypes.client.GetActiveObject("AutoCAD.Application")
@@ -106,7 +108,8 @@ if POINTS_AT_GEOM_STATIONS:
     # Make sure each entity starts where the previous one ends
     values = entities.values()
     for i in range(len(values) - 1):
-        assert isalmostequal(values[i].EndingStation, values[i + 1].StartingStation)
+        assert isalmostequal(values[i].EndingStation,
+                             values[i + 1].StartingStation)
 
     # Add applicable entity starting stations to pointStations
     for station in entities.keys():
@@ -120,7 +123,8 @@ else:
     profiles = dict([(i.Name, i) for i in alignment.Profiles])
     while True:
         try:
-            profile = profiles[doc.Utility.GetString(False, "Select profile (%s):" % (" or ".join(profiles.keys())))]
+            profile = profiles[doc.Utility.GetString(
+                False, "Select profile (%s):" % (" or ".join(profiles.keys())))]
             break
         except KeyError:
             continue
@@ -129,12 +133,19 @@ else:
 if POINTS_AT_PVI_STATIONS:
     for pvi in profile.PVIs:
         station = pvi.Station
-        if (station >= STARTING_STATION) and (station <= ENDING_STATION) and not isnuminiterable(station, pointStations):
-            pointStations.append(station)
+        if (station >= STARTING_STATION) and \
+            (station <= ENDING_STATION) and not \
+            isnuminiterable(station, pointStations, TOO_CLOSE):  # Do we need to take action in case
+                pointStations.append(station)                    # PVI is close with alignment's PI?
 
+# Append POINT_MANDATORY_STATIONS in pointStations. After that it
+# will be possible that 2 stations in pointStations will be too close
+# with each other.
 for station in POINT_MANDATORY_STATIONS:
-    if (station >= STARTING_STATION) and (station <= ENDING_STATION) and not isnuminiterable(station, pointStations):
-        pointStations.append(station)
+    if (station >= STARTING_STATION) and \
+        (station <= ENDING_STATION) and not \
+        isnuminiterable(station, pointStations):
+            pointStations.append(station)
 
 pointStations.sort()
 
@@ -149,7 +160,8 @@ while i != len(pointStations) - 1:
         pointStations.sort()
     i += 1
 
-# Check if there are any stations in pointStations that are too close (due to POINT_MANDATORY_STATIONS)
+# Check if there are any stations in pointStations that are too close
+# due to POINT_MANDATORY_STATIONS
 for i in range(len(pointStations) - 1):
     if isalmostequal(pointStations[i], pointStations[i + 1], TOO_CLOSE):
         print 50 * "!"
