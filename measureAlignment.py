@@ -113,7 +113,28 @@ if POINTS_AT_GEOM_STATIONS:
 
     # Add applicable entity starting stations to pointStations
     for station in entities.keys():
-        if (station >= STARTING_STATION) and (station <= ENDING_STATION) and not isnuminiterable(station, pointStations):
+        append = False
+        if (station >= STARTING_STATION) and \
+            (station <= ENDING_STATION) and not \
+            isnuminiterable(station, pointStations):
+                append = True
+
+        # Dealig with possible inconsistency that might be caused due to
+        # alignment's segment being too small. Added an extra "if" statement
+        # here instead of a comparison above so that we can take action in
+        # case of such an alignment (at the moment a warning is issued).
+        # TODO: Maybe we need to introduce a different control constant here
+        # such as PI_MIN_DIST for example.
+        if isnuminiterable(station, pointStations, TOO_CLOSE):
+            print 50 * "!"
+            print "WARNING: Station %.2f too close with adjucent " + \
+                "station!" % (station)
+            print "This is a sign that alignment needs refinement. " + \
+                "Ommiting the above station..."
+            print 50 * "!"
+            append = False
+
+        if append:
             pointStations.append(station)
 
 # Get desired alignment profile
