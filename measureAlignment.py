@@ -39,13 +39,6 @@ aeccApp = acadApp.GetInterfaceObject("AeccXUiLand.AeccApplication.5.0")
 doc = aeccApp.ActiveDocument
 alignment, point_clicked = doc.Utility.GetEntity("Select an alignment:")
 
-# Prepare a list of stations where points are going to be created
-if STARTING_STATION is None:
-    STARTING_STATION = alignment.StartingStation
-if ENDING_STATION is None:
-    ENDING_STATION = alignment.EndingStation
-pointStations = [STARTING_STATION, ENDING_STATION]
-
 
 def isalmostzero(num, zero=ZERO):
     """Return True if givven number <num> is equal or less than a certain
@@ -71,6 +64,14 @@ def isnuminiterable(num, iterable, zero=ZERO):
         if isalmostequal(num, elem, zero):
             return True
     return False
+
+# Prepare a list of stations where points are going to be created
+if STARTING_STATION is None:
+    STARTING_STATION = alignment.StartingStation
+if ENDING_STATION is None:
+    ENDING_STATION = alignment.EndingStation
+assert not isalmostequal(STARTING_STATION, ENDING_STATION, TOO_CLOSE)
+pointStations = [STARTING_STATION, ENDING_STATION]
 
 # Get Alignment entities if needed
 if POINTS_AT_GEOM_STATIONS:
