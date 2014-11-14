@@ -49,14 +49,25 @@ pointStations = [STARTING_STATION, ENDING_STATION]
 
 
 def isalmostzero(num, zero=ZERO):
+    """Return True if givven number <num> is equal or less than a certain
+    value <zero>. <zero> should be small enough to be considered insignificant
+    in the context it refers to.
+    """
     return abs(num) <= zero
 
 
 def isalmostequal(num1, num2, zero=ZERO):
+    """Return True if <num1> and <num2> are considered equal "enough" in a
+    certain context. Use this function instead of direct equality comparison
+    of float numbers.
+    """
     return isalmostzero(num1 - num2, zero)
 
 
 def isnuminiterable(num, iterable, zero=ZERO):
+    """Return True if <iterable> contains a number that would be considered
+    equal "enough" to <num> in a certain context.
+    """
     for elem in iterable:
         if isalmostequal(num, elem, zero):
             return True
