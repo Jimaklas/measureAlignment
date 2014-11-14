@@ -9,6 +9,19 @@ from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, POINTS_AT_GEOM_STAT
 # FIXME: Eliminate float comparisons hotfix
 # TODO: Implement program behavior for alignments without profile data
 
+#-------------------------- Sample input.py ---------------------------
+# ZERO = 1e-5
+# TOO_CLOSE = 0.10  # unit: meters
+# POINT_MANDATORY_STATIONS = [409.60, 594.13, 854.47]  # list of stations set manually (for example shaft stations)
+# POINTS_AT_GEOM_STATIONS = True
+# POINTS_AT_PVI_STATIONS = True
+# STARTING_STATION = 0.14
+# ENDING_STATION = 925.58
+# OFFSETS = [0.0, -2.0]  # unit: meters
+# STEP = 10.0  # unit: meters
+# TOLERANCE = 1.5  # unit: meters
+#------------------------- End sample input.py -------------------------
+
 # # Generate modules of necessary typelibs (AutoCAD Civil 3D 2008)
 # comtypes.client.GetModule("C:\\Program Files\\Common Files\\Autodesk Shared\\acax17enu.tlb")
 # comtypes.client.GetModule("C:\\Program Files\\AutoCAD Civil 3D 2008\\AecXBase.tlb")
