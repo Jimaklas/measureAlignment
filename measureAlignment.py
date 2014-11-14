@@ -67,6 +67,12 @@ def isnuminiterable(num, iterable, zero=ZERO):
             return True
     return False
 
+
+def issuewarning(msg):
+    print 50 * "!"
+    print msg
+    print 50 * "!"
+
 # Prepare a list of stations where points are going to be created
 if STARTING_STATION is None:
     STARTING_STATION = alignment.StartingStation
@@ -126,12 +132,10 @@ if POINTS_AT_GEOM_STATIONS:
         # TODO: Maybe we need to introduce a different control constant here
         # such as PI_MIN_DIST for example.
         if isnuminiterable(station, pointStations, TOO_CLOSE):
-            print 50 * "!"
-            print "WARNING: Station %.2f too close with adjucent " + \
-                "station!" % (station)
-            print "This is a sign that alignment needs refinement. " + \
-                "Ommiting the above station..."
-            print 50 * "!"
+            msg = "WARNING: Station %.2f too close with " % (station) + \
+                "adjucent station!\nThis is a sign that alignment needs " + \
+                "refinement. Ommiting the above station..."
+            issuewarning(msg)
             append = False
 
         if append:
@@ -151,10 +155,7 @@ elif numProfiles > 1:
         except KeyError:
             continue
 else:
-    print 50 * "!"
-    print "WARNING: Alignment has no profile data!"
-    print "Exiting..."
-    print 50 * "!"
+    issuewarning("WARNING: Alignment has no profile data!\nExiting...")
     raise SystemExit
 
 # Get alignment profile PVI stations if needed
@@ -192,9 +193,8 @@ while i != len(pointStations) - 1:
 # due to POINT_MANDATORY_STATIONS
 for i in range(len(pointStations) - 1):
     if isalmostequal(pointStations[i], pointStations[i + 1], TOO_CLOSE):
-        print 50 * "!"
-        print "WARNING: Stations %f and %f are too close!" % (pointStations[i], pointStations[i + 1])
-        print 50 * "!"
+        issuewarning("WARNING: Stations %f and %f are too close!" % (
+            pointStations[i], pointStations[i + 1]))
 
 # Draw 3D Polylines at givven stations and offsets
 for offset in OFFSETS:
