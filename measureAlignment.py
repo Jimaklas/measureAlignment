@@ -117,9 +117,10 @@ if POINTS_AT_GEOM_STATIONS:
             pointStations.append(station)
 
 # Get desired alignment profile
-if len(alignment.Profiles) == 1:
+numProfiles = alignment.Profiles
+if len(numProfiles) == 1:
     profile = alignment.Profiles[0]
-else:
+elif numProfiles > 1:
     profiles = dict([(i.Name, i) for i in alignment.Profiles])
     while True:
         try:
@@ -128,6 +129,12 @@ else:
             break
         except KeyError:
             continue
+else:
+    print 50 * "!"
+    print "WARNING: Alignment has no profile data!"
+    print "Exiting..."
+    print 50 * "!"
+    raise SystemExit
 
 # Get alignment profile PVI stations if needed
 if POINTS_AT_PVI_STATIONS:
