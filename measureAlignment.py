@@ -22,7 +22,38 @@ from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, \
 # TOLERANCE = 1.5  # unit: meters
 #------------------------- End sample input.py -------------------------
 
-# # Generate modules of necessary typelibs (AutoCAD Civil 3D 2008)
+#------------- Necessary Typelibs (AutoCAD Civil 3D 2008) --------------
+# AutoCAD 2008 Type Library
+#     CLSID:      "_851A4561_F4EC_4631_9B0C_E7DC407512C9_0_1_0"
+#     DLL/TLB:    "C:\\Program Files\\Common Files\\Autodesk Shared\\acax17enu.tlb"
+#
+# AutoCAD/ObjectDBX Common 17.0 Type Library
+#     CLSID:      "_11A32D00_9E89_4C16_82CB_629DEBA56AE2_0_1_0"
+#     DLL/TLB:    "C:\\Program Files\\Common Files\\Autodesk Shared\\axdb17enu.tlb"
+#
+# AEC Base 5.5 Object Library
+#     CLSID:      "_E7BAE300_BF69_431B_9153_1FF0DEF8F613_0_5_5"
+#     DLL/TLB:    "C:\\Program Files\\AutoCAD Civil 3D 2008\\AecXBase.tlb"
+#
+# AEC Base 5.5 Application Library
+#     CLSID:      "_E7BAE100_BF69_431B_9153_1FF0DEF8F613_0_5_5"
+#     DLL/TLB:    "C:\\Program Files\\AutoCAD Civil 3D 2008\\AecXUIBase.tlb"
+#
+# Autodesk Civil Engineering Land 5.0 Object Library
+#     CLSID:      "_E932008F_0032_4186_8DF9_3D5372B7DC57_0_5_0"
+#     DLL/TLB:    "C:\\Program Files\\AutoCAD Civil 3D 2008\\Civil\\AeccXLand.tlb"
+#
+# Autodesk Civil Engineering UI Land 5.0 Object Library
+#     CLSID:      "_E9330001_0032_4186_8DF9_3D5372B7DC57_0_5_0"
+#     DLL/TLB:    "C:\\Program Files\\AutoCAD Civil 3D 2008\\Civil\\AeccXUiLand.tlb"
+#
+# OLE Automation (2.0)
+#     CLSID:      "_00020430_0000_0000_C000_000000000046_0_2_0"
+#     DLL/TLB:    "C:\\WINDOWS\\system32\\stdole2.tlb"
+#----------- End Necessary Typelibs (AutoCAD Civil 3D 2008) ------------
+
+# # Generate modules of necessary typelibs for comtypes package
+# # Missing typelibs from above table are generated automatically
 # comtypes.client.GetModule("C:\\Program Files\\Common Files\\Autodesk Shared\\acax17enu.tlb")
 # comtypes.client.GetModule("C:\\Program Files\\AutoCAD Civil 3D 2008\\AecXBase.tlb")
 # comtypes.client.GetModule("C:\\Program Files\\AutoCAD Civil 3D 2008\\AecXUIBase.tlb")
@@ -205,8 +236,8 @@ for offset in OFFSETS:
         x, y = alignment.PointLocation(station, offset)
         try:
             z = profile.ElevationAt(station)
-        except COMError:
-            z = 0.0
+        except COMError:  # raised when <station> is out of <profile> range
+            z = 0.0  # TODO: Maybe use a constant here (i.e. DEFAULT_ELEV)?
         command.append("%s,%s,%s" % (x, y, z))
 
     command.append(" ")
