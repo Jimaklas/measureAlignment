@@ -9,7 +9,7 @@ from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, \
 
 # TODO: Implement program behavior for alignments without profile data
 
-#-------------------------- Sample input.py ---------------------------
+# -------------------------- Sample input.py --------------------------
 # ZERO = 1e-5
 # TOO_CLOSE = 0.10  # unit: meters
 # POINT_MANDATORY_STATIONS = [409.60, 594.13, 854.47]  # list of stations set manually (for example shaft stations)
@@ -20,9 +20,9 @@ from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, \
 # OFFSETS = [0.0, -2.0]  # unit: meters
 # STEP = 10.0  # unit: meters
 # TOLERANCE = 1.5  # unit: meters
-#------------------------- End sample input.py -------------------------
+# ------------------------- End sample input.py ------------------------
 
-#------------- Necessary Typelibs (AutoCAD Civil 3D 2008) --------------
+# ------------- Necessary Typelibs (AutoCAD Civil 3D 2008) -------------
 # AutoCAD 2008 Type Library
 #     CLSID:      "_851A4561_F4EC_4631_9B0C_E7DC407512C9_0_1_0"
 #     DLL/TLB:    "C:\\Program Files\\Common Files\\Autodesk Shared\\acax17enu.tlb"
@@ -50,7 +50,7 @@ from input import ZERO, TOO_CLOSE, POINT_MANDATORY_STATIONS, \
 # OLE Automation (2.0)
 #     CLSID:      "_00020430_0000_0000_C000_000000000046_0_2_0"
 #     DLL/TLB:    "C:\\WINDOWS\\system32\\stdole2.tlb"
-#----------- End Necessary Typelibs (AutoCAD Civil 3D 2008) ------------
+# ----------- End Necessary Typelibs (AutoCAD Civil 3D 2008) -----------
 
 # # Generate modules of necessary typelibs for comtypes package
 # # Missing typelibs from above table are generated automatically
@@ -152,8 +152,8 @@ if POINTS_AT_GEOM_STATIONS:
     for station in entities.keys():
         append = False
         if (station >= STARTING_STATION) and \
-            (station <= ENDING_STATION) and not \
-            isnuminiterable(station, pointStations):
+           (station <= ENDING_STATION) and not \
+           isnuminiterable(station, pointStations):
                 append = True
 
         # Dealig with possible inconsistency that might be caused due to
@@ -194,17 +194,17 @@ if POINTS_AT_PVI_STATIONS:
     for pvi in profile.PVIs:
         station = pvi.Station
         if (station >= STARTING_STATION) and \
-            (station <= ENDING_STATION) and not \
-            isnuminiterable(station, pointStations, TOO_CLOSE):  # Do we need to take action in case
-                pointStations.append(station)                    # PVI is close with alignment's PI?
+           (station <= ENDING_STATION) and not \
+           isnuminiterable(station, pointStations, TOO_CLOSE):  # Do we need to take action in case
+                pointStations.append(station)                   # PVI is close with alignment's PI?
 
 # Append POINT_MANDATORY_STATIONS in pointStations. After that it
 # will be possible that 2 stations in pointStations will be too close
 # with each other.
 for station in POINT_MANDATORY_STATIONS:
     if (station >= STARTING_STATION) and \
-        (station <= ENDING_STATION) and not \
-        isnuminiterable(station, pointStations):
+       (station <= ENDING_STATION) and not \
+       isnuminiterable(station, pointStations):
             pointStations.append(station)
 
 pointStations.sort()
