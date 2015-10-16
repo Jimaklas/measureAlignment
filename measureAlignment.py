@@ -173,8 +173,8 @@ if POINTS_AT_GEOM_STATIONS:
             pointStations.append(station)
 
 # Get desired alignment profile
-numProfiles = alignment.Profiles
-if len(numProfiles) == 1:
+numProfiles = len(alignment.Profiles)
+if numProfiles == 1:
     profile = alignment.Profiles[0]
 elif numProfiles > 1:
     profiles = dict([(i.Name, i) for i in alignment.Profiles])
@@ -187,10 +187,11 @@ elif numProfiles > 1:
             continue
 else:
     issuewarning("WARNING: Alignment has no profile data!\nExiting...")
-    raise SystemExit
+    profile = None
 
 # Get alignment profile PVI stations if needed
 if POINTS_AT_PVI_STATIONS:
+    assert profile is not None
     for pvi in profile.PVIs:
         station = pvi.Station
         if (station >= STARTING_STATION) and \
@@ -238,6 +239,8 @@ for offset in OFFSETS:
             z = profile.ElevationAt(station)
         except COMError:  # raised when <station> is out of <profile> range
             z = 0.0  # TODO: Maybe use a constant here (i.e. DEFAULT_ELEV)?
+        except AttributeError:  # raised when alignment has no profile
+            z = 0.0
         command.append("%s,%s,%s" % (x, y, z))
 
     command.append(" ")
